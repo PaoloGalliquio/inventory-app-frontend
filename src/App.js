@@ -1,24 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import React, { useState, Suspense } from "react";
+import { SwitchTransition, CSSTransition } from "react-transition-group";
+import { appRoutes } from "./routes";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
+  const [username, setUsername] = useState("");
+  const [isLogged, setIsLogged] = useState(false);
+  const location = useLocation();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <SwitchTransition component={null}>
+      <CSSTransition
+        key={location.pathname}
+        classNames="fade"
+        timeout={300}
+        unmountOnExit>
+        <Suspense fallback={() => <h1>Cargando...</h1>}>
+          <Routes location={location}>
+            {appRoutes.map((route) => {
+              if (route.requiresAuth && !isLogged) {
+                return (
+                  <Route
+                    key={route.path}
+                    exact
+                    path={route.path}
+                    element={<Navigate replace to={"/login"} />}
+                  />
+                );
+              } else {
+                return (
+                  <Route
+                    key={route.path}
+                    exact
+                    path={route.path}
+                    element={
+                      <route.component
+                        setIsLogged={setIsLogged}
+                        setUsername={setUsername}
+                        username={username}
+                      />
+                    }
+                  />
+                );
+              }
+            })}
+          </Routes>
+        </Suspense>
+      </CSSTransition>
+    </SwitchTransition>
   );
 }
 
