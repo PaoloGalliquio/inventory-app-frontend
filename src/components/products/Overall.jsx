@@ -1,7 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 
-export function Overall() {
+export function Overall({ categories, products }) {
+  const totalProducts = products.length;
+  const totalCategories = categories.length;
+  const lowStockProducts = products.filter(
+    (product) => product.quantity < 5
+  ).length;
+
   return (
     <Row>
       <Col className="border-end">
@@ -11,7 +17,7 @@ export function Overall() {
           </Col>
         </Row>
         <Row>
-          <Col>3</Col>
+          <Col>{totalCategories}</Col>
         </Row>
       </Col>
       <Col className="border-end">
@@ -21,8 +27,7 @@ export function Overall() {
           </Col>
         </Row>
         <Row>
-          <Col>10</Col>
-          <Col>S/ 5000</Col>
+          <Col>{totalProducts}</Col>
         </Row>
       </Col>
       <Col>
@@ -32,7 +37,7 @@ export function Overall() {
           </Col>
         </Row>
         <Row>
-          <Col>3</Col>
+          <Col>{lowStockProducts}</Col>
         </Row>
       </Col>
     </Row>

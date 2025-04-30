@@ -10,7 +10,7 @@ export const appRoutes = [
   {
     path: "/",
     component: Inventory,
-    requiresAuth: false,
+    requiresAuth: true,
   },
   {
     path: "/login",
@@ -20,21 +20,21 @@ export const appRoutes = [
   {
     path: "/inventory",
     component: Inventory,
-    requiresAuth: false,
+    requiresAuth: true,
   },
   {
     path: "/users",
     component: Users,
-    requiresAuth: false,
+    requiresAuth: true,
   },
   {
     path: "/reports",
     component: Reports,
-    requiresAuth: false,
+    requiresAuth: true,
   },
   {
     path: "*",
     component: NotFound,
-    requiresAuth: false,
+    requiresAuth: true,
   },
 ];

@@ -1,0 +1,9 @@
+export const USER_ID_KEY = "userId";
+export const USER_NAME_KEY = "userName";
+export const USER_EMAIL_KEY = "email";
+export const TOKEN_KEY = "token";
+export const IS_AUTH_KEY = "is_auth";
+export const PROFILE = "profile";
+export const ROLE = "role";
+export const ROLE_ID = "roleIds";
+export const EMAIL = "email";

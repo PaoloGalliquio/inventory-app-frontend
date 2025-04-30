@@ -67,10 +67,44 @@ export const handleFindDropdownSelected = (allDropdowns, res, key) => {
 export const handleChangeSelect = (setFormValues, res, key) => {
   setFormValues((lastData) => ({
     ...lastData,
-    [key]: res.target?.value?.value ?? res.target?.value,
+    [key]: res.target?.value,
   }));
 };
 
 export const responseCode200 = (response) => {
   return response && response.status && response.status === 200 ? true : false;
 };
+
+export const isNullOrUndefinded = (data) => {
+  return data == null || data == undefined ? true : false;
+};
+
+export const manageResponse = (response, dispatch, navigate) => {
+  if (response.response !== undefined) {
+    if (response.response.status === 401) {
+      console.error("Error 401");
+      redirectToLogIn(dispatch);
+      mostrarMensajeSesionExpirada(dispatch);
+    } else if (response.response.status === 403) {
+      console.error("Error 403 ", response);
+      navigate.push("/");
+    } else if (response.response.status === 500) {
+      console.error("Error 500 ", response);
+      redirectToLogIn(dispatch);
+    }
+  }
+};
+
+function mostrarMensajeSesionExpirada(dispatch) {
+  console.debug("mostrarMensajeSesionExpirada");
+  dispatch({
+    type: "SHOW_MESSAGE_EXPIRED_SESSION",
+  });
+}
+
+function redirectToLogIn(dispatch) {
+  console.debug("redirectToLogIn");
+  dispatch({
+    type: "LOGOUT",
+  });
+}

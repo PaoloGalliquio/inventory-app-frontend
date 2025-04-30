@@ -1,62 +1,75 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Overall } from "../components/products/Overall";
 import Product from "../components/products/Product";
-import { Products } from "../components/products/Products";
+import { ProductsTable } from "../components/products/ProductsTable";
 import NavBar from '../components/navBar/NavBar';
+import { useManageGetRequest } from '../hooks/useManageRequest/useManageRequest';
+import CreateProduct from '../components/products/CreateProduct';
+import EditProduct from '../components/products/EditProduct';
+import DetailProduct from '../components/products/DetailProduct';
 
 function Inventory() {
   const [showCreate, setShowCreate] = useState(false);
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Product 1",
-      description: "Description 1",
-      price: 10.0,
-      quantity: 20,
-      categoryId: 1,
-      categoryName: "Category 1",
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      description: "Description 2",
-      price: 20.0,
-      quantity: 15,
-      categoryId: 2,
-      categoryName: "Category 2",
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      description: "Description 3",
-      price: 30.0,
-      quantity: 10,
-      categoryId: 3,
-      categoryName: "Category 3",
-    },
-  ]);
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Category 1" },
-    { id: 2, name: "Category 2" },
-    { id: 3, name: "Category 3" },
-  ]);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [executeGet] = useManageGetRequest();
 
-  const modalCreate = (
-    <Product
+  const createModal = (
+    <CreateProduct
       show={showCreate}
       setShow={setShowCreate}
-      canEdit={true}
       categories={categories}
     />
   );
+
+  const editModal = (
+    <EditProduct
+      show={showEdit}
+      setShow={setShowEdit}
+      categories={categories}
+      product={product}
+      setProduct={setProduct}
+    />
+  );
+
+  const detailModal = (
+    <DetailProduct
+      show={showDetail}
+      setShow={setShowDetail}
+      categories={categories}
+      product={product}
+      setProduct={setProduct}
+    />
+  );
+
+  const deleteModal = (
+    <></>
+  );
+
+  const init = async () => {
+    await executeGet("/api/Product", (response) => {
+      setProducts(response.data);
+    });
+    await executeGet("/api/Category", (response) => {
+      setCategories(response.data);
+    });
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <>
       <NavBar />
       <Container className="py-2 px-3">
         <Row className="card py-3 px-2 mt-3">
-          <Overall />
+          <Overall categories={categories} products={categories} />
         </Row>
         <Row className="card py-3 px-2 mt-3">
           <Col xs={12} className="mb-3">
@@ -65,18 +78,30 @@ function Inventory() {
                 <b>Productos</b>
               </Col>
               <Col className="text-end">
-                <Button variant="primary" size="sm" onClick={() => setShowCreate(true)}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setShowCreate(true)}>
                   Agregar producto
                 </Button>
               </Col>
             </Row>
           </Col>
           <Col>
-            <Products products={products} />
+            <ProductsTable
+              products={products}
+              setProduct={setProduct}
+              setShowDetail={setShowDetail}
+              setShowEdit={setShowEdit}
+              setShowDelete={setShowDelete}
+            />
           </Col>
         </Row>
       </Container>
-      {modalCreate}
+      {createModal}
+      {editModal}
+      {detailModal}
+      {deleteModal}
     </>
   );
 }

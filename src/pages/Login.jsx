@@ -1,18 +1,48 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Container, Button, Form } from "react-bootstrap";
 import { usePropsInputs } from '../hooks/useProps/usePropsInput';
+import { AuthContext } from '../hooks/context/authContext';
+import { validateLogin } from '../consumers/backendConsumer';
+import { Navigate } from "react-router-dom";
 
-function Login() {
+function Login({url}) {
   const SECTION_NAME = "Login";
   const KEYS = {
     email: "email",
     password: "password",
   };
+  const { dispatch, state } = useContext(AuthContext);
   const [formValues, setFormValues] = useState({});
   const [commonProps] = usePropsInputs(formValues, setFormValues, SECTION_NAME);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const response = await validateLogin(formValues.email, formValues.password);
+    console.log("response", response);
+    
+    if (response.status === 200) {
+      return await dispatch({
+        type: "LOGIN",
+        payload: {
+          isLoggedIn: true,
+          email: response.data.email,
+          userId: response.data.idUser,
+          userEmail: response.data.email,
+          userName: response.data.name,
+          token: response.data.token,
+          role: response.data.userRoleName,
+          roleId: response.data.idUserRole,
+        },
+      });
+    } else {
+      console.error("Login failed:", response.statusText);
+    }
+  }
+
+  if (state.isLoggedIn) {
+    return (
+      <Navigate to="/"/>
+    );
   }
 
   return (

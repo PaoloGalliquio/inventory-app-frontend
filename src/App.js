@@ -1,55 +1,46 @@
 import "./App.css";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import React, { useState, Suspense } from "react";
+import React, { Suspense, useContext } from "react";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { appRoutes } from "./routes";
+import { AuthContext, AuthProvider } from "./hooks/context/authContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [isLogged, setIsLogged] = useState(false);
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
+function AppContent() {
   const location = useLocation();
+  const { state } = useContext(AuthContext);
 
   return (
-    <SwitchTransition component={null}>
-      <CSSTransition
-        key={location.pathname}
-        classNames="fade"
-        timeout={300}
-        unmountOnExit>
-        <Suspense fallback={() => <h1>Cargando...</h1>}>
-          <Routes location={location}>
-            {appRoutes.map((route) => {
-              if (route.requiresAuth && !isLogged) {
-                return (
-                  <Route
-                    key={route.path}
-                    exact
-                    path={route.path}
-                    element={<Navigate replace to={"/login"} />}
-                  />
-                );
-              } else {
-                return (
-                  <Route
-                    key={route.path}
-                    exact
-                    path={route.path}
-                    element={
-                      <route.component
-                        setIsLogged={setIsLogged}
-                        setUsername={setUsername}
-                        username={username}
-                      />
-                    }
-                  />
-                );
-              }
-            })}
-          </Routes>
-        </Suspense>
-      </CSSTransition>
-    </SwitchTransition>
+    <Suspense fallback={<h1>Cargando...</h1>}>
+      <Routes location={location}>
+        {appRoutes.map((route) => {
+          if (route.requiresAuth && !state.isLoggedIn) {
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<Navigate replace to="/login" />}
+              />
+            );
+          }
+          return (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<route.component />}
+            />
+          );
+        })}
+      </Routes>
+    </Suspense>
   );
 }
 

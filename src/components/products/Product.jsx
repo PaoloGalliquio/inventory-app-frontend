@@ -1,48 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { usePropsInputs } from '../../hooks/useProps/usePropsInput.js';
-import { initialAllOptionPromises } from '../../helper/utils.js';
 import { usePropsSelect } from '../../hooks/useProps/usePropsSelect.js';
 
-export default function Product({ show, setShow, canEdit, product, categories  }) {
+export default function Product({
+  show,
+  setShow,
+  canEdit,
+  categories,
+  product,
+  title,
+  handleSubmit,
+  formValues,
+  setFormValues,
+  isLoading,
+  setIsLoading,
+}) {
   const SECTION_NAME = "products";
   const KEYS = {
-    name: "name",
-    description: "description",
-    price: "price",
-    quantity: "quantity",
-    categoryId: "categoryId",
-  }
-  const [isLoading, setIsLoading] = useState(true);
-  const [formValues, setFormValues] = useState({});
+    name: "Name",
+    description: "Description",
+    price: "Price",
+    quantity: "Quantity",
+    idCategory: "IdCategory",
+  };
+  const [allDropdowns, setAllDropdowns] = useState([{ key: "categories", value: categories }]);
   const [commonProps] = usePropsInputs(formValues, setFormValues, SECTION_NAME);
-  const [selectProps] = usePropsSelect(categories, formValues, setFormValues, SECTION_NAME);
-  // const [getOptions] = useGetOptionsSelect();
-
-  const initialPromises = () => {
-    // return [getOptions("")];
-  };
-
-  const init = async () => {
-    setIsLoading(true);
-    try {
-      await initialAllOptionPromises(
-        initialPromises,
-        Object.values(KEYS),
-        // setAllDropdowns
-        () => {}
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [selectProps] = usePropsSelect(allDropdowns, formValues, setFormValues);
 
   return (
     <Modal show={show} onHide={() => setShow(true)}>
       <Modal.Header closeButton>
-        <Modal.Title>Nuevo Producto</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -52,7 +41,7 @@ export default function Product({ show, setShow, canEdit, product, categories  }
               type="text"
               placeholder="Nombre del producto"
               {...commonProps(KEYS.name)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicDescription">
@@ -61,7 +50,7 @@ export default function Product({ show, setShow, canEdit, product, categories  }
               type="text"
               placeholder="Descripción del producto"
               {...commonProps(KEYS.description)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPrice">
@@ -70,7 +59,7 @@ export default function Product({ show, setShow, canEdit, product, categories  }
               type="number"
               placeholder="Precio del producto"
               {...commonProps(KEYS.price)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicQuantity">
@@ -79,28 +68,36 @@ export default function Product({ show, setShow, canEdit, product, categories  }
               type="number"
               placeholder="Cantidad del producto"
               {...commonProps(KEYS.quantity)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCategory">
             <Form.Label>Categoría</Form.Label>
             <Form.Select
               aria-label="Default select example"
-              disabled={!canEdit}>
+              {...selectProps(KEYS.idCategory)}
+              disabled={!canEdit || isLoading}>
               <option>Seleccionar categoría</option>
-              <option value="1">Categoría 1</option>
-              <option value="2">Categoría 2</option>
-              <option value="3">Categoría 3</option>
+              {categories.map((category) => (
+                <option key={category.idCategory} value={category.idCategory}>
+                  {category.name}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant={canEdit ? "secondary" : "primary"} onClick={() => setShow(false)}>
+        <Button
+          variant={canEdit ? "secondary" : "primary"}
+          onClick={() => setShow(false)}>
           Cerrar
         </Button>
         {canEdit && (
-          <Button variant="primary" onClick={() => console.log(formValues)}>
+          <Button
+            variant="primary"
+            disabled={isLoading}
+            onClick={() => handleSubmit()}>
             Guardar Producto
           </Button>
         )}

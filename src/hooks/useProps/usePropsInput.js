@@ -8,7 +8,7 @@ export const usePropsInputs = (formValues, setFormValues, sectionName) => {
   const propsCommonInputs = (name) => {
     let common = {
       name,
-      value: formValues[name],
+      value: formValues?.[name],
       onChange: (res) => handleChange(res),
       sectionName,
     };
