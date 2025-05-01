@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { useManagePostRequest } from '../../hooks/useManageRequest/useManageRequest';
-import Product from './Product';
+import User from './User';
 
-function CreateProduct({ closeModal, refreshPage, categories }) {
+function CreateUser({ closeModal, refreshPage, roles }) {
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState({});
   const [executePost] = useManagePostRequest();
 
   const handleCreate = async () => {
     setIsLoading(true);
-    await executePost("/api/Product", formValues, successSubmitCallback);
+    await executePost("/api/User", formValues, successSubmitCallback);
     setIsLoading(false);
   };
 
@@ -19,11 +19,11 @@ function CreateProduct({ closeModal, refreshPage, categories }) {
   };
 
   return (
-    <Product
+    <User
       closeModal={closeModal}
-      title="Crear Producto"
+      title="Crear Usuario"
       canEdit={true}
-      categories={categories}
+      roles={roles}
       handleSubmit={handleCreate}
       formValues={formValues}
       setFormValues={setFormValues}
@@ -32,4 +32,4 @@ function CreateProduct({ closeModal, refreshPage, categories }) {
   );
 }
 
-export default CreateProduct
+export default CreateUser

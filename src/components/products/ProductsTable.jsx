@@ -2,8 +2,19 @@ import React, { useCallback, useState } from "react";
 import { Button, Table, Collapse, Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import arrow from "../../assets/icons/Arrow.svg";
+import DetailProduct from "./DetailProduct";
+import EditProduct from "./EditProduct";
+import DeleteProduct from "./DeleteProduct";
 
-export function ProductsTable({ products, setProduct, setShowEdit, setShowDetail, setShowDelete }) {
+export function ProductsTable({ products, categories, setModalEnabled }) {
+  const KEYS = {
+    name: "Name",
+    description: "Description",
+    price: "Price",
+    quantity: "Quantity",
+    category: "Category",
+    idCategory: "IdCategory",
+  };
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [openRows, setOpenRows] = useState(new Set());
   const toggleRow = useCallback((productId) => {
@@ -32,19 +43,25 @@ export function ProductsTable({ products, setProduct, setShowEdit, setShowDetail
           {products.map((product, index) => (
             <tr key={product.id}>
               <td>{index + 1}</td>
-              <td>{product.name}</td>
-              <td>{product.description}</td>
-              <td>S/ {product.price}</td>
-              <td>{product.quantity}</td>
-              <td>{product.category?.name}</td>
+              <td>{product[KEYS.name]}</td>
+              <td>{product[KEYS.description]}</td>
+              <td>S/ {product[KEYS.price]}</td>
+              <td>{product[KEYS.quantity]}</td>
+              <td>{product[KEYS.category]?.[KEYS.name]}</td>
               <td>
                 <Button
                   variant="outline-info"
                   size="sm"
                   className="me-2"
                   onClick={() => {
-                    setProduct(product);
-                    setShowDetail(true);
+                    setModalEnabled({
+                      isEnable: true,
+                      component: DetailProduct,
+                      props: {
+                        product,
+                        categories,
+                      },
+                    });
                   }}>
                   Detalle
                 </Button>
@@ -53,8 +70,14 @@ export function ProductsTable({ products, setProduct, setShowEdit, setShowDetail
                   size="sm"
                   className="me-2"
                   onClick={() => {
-                    setProduct(product);
-                    setShowEdit(true);
+                    setModalEnabled({
+                      isEnable: true,
+                      component: EditProduct,
+                      props: {
+                        product,
+                        categories,
+                      },
+                    });
                   }}>
                   Editar
                 </Button>
@@ -62,8 +85,13 @@ export function ProductsTable({ products, setProduct, setShowEdit, setShowDetail
                   variant="outline-danger"
                   size="sm"
                   onClick={() => {
-                    setProduct(product);
-                    setShowDelete(true);
+                    setModalEnabled({
+                      isEnable: true,
+                      component: DeleteProduct,
+                      props: {
+                        product
+                      },
+                    });
                   }}>
                   Eliminar
                 </Button>

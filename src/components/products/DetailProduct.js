@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Product from './Product';
-import { useManageGetRequest, useManagePutRequest } from '../../hooks/useManageRequest/useManageRequest';
+import { useManageGetRequest } from '../../hooks/useManageRequest/useManageRequest';
 
-function DetailProduct({ show, setShow, categories, product, setProduct }) {
+function DetailProduct({ closeModal, refreshPage, product, categories }) {
   const [isLoading, setIsLoading] = useState(true);
   const [formValues, setFormValues] = useState({});
-  const [executePut] = useManagePutRequest();
   const [executeGet] = useManageGetRequest();
 
   const init = async () => {
-    await executeGet(`/api/Product/${product.idProduct}`, (response) => {
+    await executeGet(`/api/Product/${product.IdProduct}`, (response) => {
       setFormValues(response.data ?? {});
     });
   };
@@ -22,21 +21,18 @@ function DetailProduct({ show, setShow, categories, product, setProduct }) {
     setIsLoading(false);
   }, []);
 
-  if(isLoading) return <></>;
-  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Product
-      show={show}
-      setShow={setShow}
+      closeModal={closeModal}
+      title="Detalle de Producto"
       canEdit={false}
       categories={categories}
-      product={product}
-      setProduct={setProduct}
-      title="Detalle Producto"
       formValues={formValues}
-      setFormValues={setFormValues}
       isLoading={isLoading}
-      setIsLoading={setIsLoading}
     />
   );
 }

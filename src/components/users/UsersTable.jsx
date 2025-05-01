@@ -2,8 +2,9 @@ import React, { useCallback, useState } from "react";
 import { Button, Table, Collapse, Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import arrow from "../../assets/icons/Arrow.svg";
+import EditUser from "./EditUser";
 
-export function UsersTable({ users }) {
+export function UsersTable({ users, roles, setModalEnabled }) {
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [openRows, setOpenRows] = useState(new Set());
   const toggleRow = useCallback((productId) => {
@@ -29,13 +30,26 @@ export function UsersTable({ users }) {
           {users.map((user, index) => (
             <tr key={user.id}>
               <td>{index + 1}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
+              <td>{user.Name}</td>
+              <td>{user.Email}</td>
               <td>
                 <Button variant="outline-info" size="sm" className="me-2">
                   Detalle
                 </Button>
-                <Button variant="outline-primary" size="sm" className="me-2">
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => {
+                    setModalEnabled({
+                      isEnable: true,
+                      component: EditUser,
+                      props: {
+                        user,
+                        roles,
+                      },
+                    });
+                  }}>
                   Editar
                 </Button>
                 <Button variant="outline-danger" size="sm">

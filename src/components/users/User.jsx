@@ -1,48 +1,35 @@
-import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { usePropsInputs } from "../../hooks/useProps/usePropsInput.js";
-import { initialAllOptionPromises } from "../../helper/utils.js";
+import { usePropsSelect } from "../../hooks/useProps/usePropsSelect.js";
+import { useState } from "react";
 
 export default function User({
-  show,
-  setShow,
+  closeModal,
+  title,
   canEdit,
-  user = null,
+  roles,
+  handleSubmit,
+  formValues,
+  setFormValues,
+  isLoading,
 }) {
   const SECTION_NAME = "Users";
   const KEYS = {
-    name: "name",
-    email: "email",
+    name: "Name",
+    email: "Email",
+    password: "Password",
+    idRole: "IdRole"
   };
-  const [isLoading, setIsLoading] = useState(true);
-  const [formValues, setFormValues] = useState(user || {});
+  const [allDropdowns, setAllDropdowns] = useState([
+    { key: "IdRole", value: roles },
+  ]);
   const [commonProps] = usePropsInputs(formValues, setFormValues, SECTION_NAME);
-  // const [getOptions] = useGetOptionsSelect();
-
-  const initialPromises = () => {
-    // return [getOptions("")];
-  };
-
-  const init = async () => {
-    setIsLoading(true);
-    try {
-      await initialAllOptionPromises(
-        initialPromises,
-        Object.values(KEYS),
-        // setAllDropdowns
-        () => {}
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [selectProps] = usePropsSelect(allDropdowns, formValues, setFormValues, SECTION_NAME);
 
   return (
-    <Modal show={show} onHide={() => setShow(true)}>
+    <>
       <Modal.Header closeButton>
-        <Modal.Title>Nuevo Usuario</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -52,41 +39,55 @@ export default function User({
               type="text"
               placeholder="Nombre"
               {...commonProps(KEYS.name)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicPrice">
+          <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control
-              type="number"
+              type="text"
               placeholder="Email"
               {...commonProps(KEYS.email)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicPrice">
+          <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
-              type="number"
+              type="password"
               placeholder="Contraseña"
               {...commonProps(KEYS.password)}
-              disabled={!canEdit}
+              disabled={!canEdit || isLoading}
             />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicRole">
+            <Form.Label>Rol</Form.Label>
+            <Form.Select
+              aria-label="Default select example"
+              {...selectProps(KEYS.idRole)}
+              disabled={!canEdit || isLoading}>
+              <option>Seleccionar rol</option>
+              {roles.map((role) => (
+                <option key={role.IdRole} value={role.IdRole}>
+                  {role.Name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
         <Button
           variant={canEdit ? "secondary" : "primary"}
-          onClick={() => setShow(false)}>
+          onClick={closeModal}>
           Cerrar
         </Button>
         {canEdit && (
-          <Button variant="primary" onClick={() => console.log(formValues)}>
+          <Button variant="primary" onClick={() => handleSubmit()}>
             Guardar Usuario
           </Button>
         )}
       </Modal.Footer>
-    </Modal>
+    </>
   );
 }

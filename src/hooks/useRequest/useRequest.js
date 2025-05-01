@@ -11,8 +11,6 @@ export const useGetRequest = () => {
 
   const executeGetRequest = async (api) => {
     if (api) {
-      console.log("url", `${urlApiBackend}${api}`);
-      
       return await axios
         .get(`${urlApiBackend}${api}`, {
           headers: {

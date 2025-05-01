@@ -18,20 +18,18 @@ function Login({url}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await validateLogin(formValues.email, formValues.password);
-    console.log("response", response);
-    
     if (response.status === 200) {
       return await dispatch({
         type: "LOGIN",
         payload: {
           isLoggedIn: true,
-          email: response.data.email,
-          userId: response.data.idUser,
-          userEmail: response.data.email,
-          userName: response.data.name,
-          token: response.data.token,
-          role: response.data.userRoleName,
-          roleId: response.data.idUserRole,
+          email: response.data.Email,
+          userId: response.data.IdUser,
+          userEmail: response.data.Email,
+          userName: response.data.Name,
+          token: response.data.Token,
+          role: response.data.UserRoleName,
+          roleId: response.data.IdUserRole,
         },
       });
     } else {

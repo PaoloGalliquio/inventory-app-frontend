@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Product from './Product';
 import { useManageGetRequest, useManagePutRequest } from '../../hooks/useManageRequest/useManageRequest';
+import User from './User';
 
-function EditProduct({ closeModal, refreshPage, product, categories }) {
-  const [isLoading, setIsLoading] = useState(true);
+function EditUser({ closeModal, refreshPage, user, roles }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState({});
   const [executePut] = useManagePutRequest();
   const [executeGet] = useManageGetRequest();
@@ -11,7 +11,7 @@ function EditProduct({ closeModal, refreshPage, product, categories }) {
   const handleUpdate = async () => {
     setIsLoading(true);
     await executePut(
-      `/api/Product/${product.IdProduct}`,
+      `/api/User/${user.IdUser}`,
       formValues,
       successSubmitCallback
     );
@@ -22,27 +22,27 @@ function EditProduct({ closeModal, refreshPage, product, categories }) {
     closeModal();
     await refreshPage();
   };
-
+  
   const init = async () => {
-    await executeGet(`/api/Product/${product.IdProduct}`, (response) => {
+    await executeGet(`/api/User/${user.IdUser}`, (response) => {
       setFormValues(response.data ?? {});
     });
   };
 
   useEffect(() => {
     setIsLoading(true);
-    if (product) {
+    if (user) {
       init();
     }
     setIsLoading(false);
   }, []);
 
   return (
-    <Product
+    <User
       closeModal={closeModal}
-      title="Editar Producto"
+      title="Editar Usuario"
       canEdit={true}
-      categories={categories}
+      roles={roles}
       handleSubmit={handleUpdate}
       formValues={formValues}
       setFormValues={setFormValues}
@@ -51,4 +51,4 @@ function EditProduct({ closeModal, refreshPage, product, categories }) {
   );
 }
 
-export default EditProduct
+export default EditUser;

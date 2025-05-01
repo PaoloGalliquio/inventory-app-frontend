@@ -59,9 +59,7 @@ export const handleFind = (allDropdowns, key) => {
 };
 
 export const handleFindDropdownSelected = (allDropdowns, res, key) => {
-  return allDropdowns
-    ?.find((o) => o.key == key)
-    ?.value?.find((o) => o.value == res[key]);
+  return allDropdowns?.find((o) => o.key == key)?.value?.find((o) => o.value == res[key]);
 };
 
 export const handleChangeSelect = (setFormValues, res, key) => {
@@ -72,7 +70,11 @@ export const handleChangeSelect = (setFormValues, res, key) => {
 };
 
 export const responseCode200 = (response) => {
-  return response && response.status && response.status === 200 ? true : false;
+  return response &&
+    response.status &&
+    (response.status === 200 || response.status === 201 || response.status === 204)
+    ? true
+    : false;
 };
 
 export const isNullOrUndefinded = (data) => {

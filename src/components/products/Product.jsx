@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { usePropsInputs } from '../../hooks/useProps/usePropsInput.js';
 import { usePropsSelect } from '../../hooks/useProps/usePropsSelect.js';
 
 export default function Product({
-  show,
-  setShow,
+  closeModal,
+  title,
   canEdit,
   categories,
-  product,
-  title,
   handleSubmit,
   formValues,
   setFormValues,
-  isLoading,
-  setIsLoading,
+  isLoading
 }) {
   const SECTION_NAME = "products";
   const KEYS = {
@@ -24,12 +21,14 @@ export default function Product({
     quantity: "Quantity",
     idCategory: "IdCategory",
   };
-  const [allDropdowns, setAllDropdowns] = useState([{ key: "categories", value: categories }]);
+  const [allDropdowns, setAllDropdowns] = useState([
+    { key: "IdCategory", value: categories },
+  ]);
   const [commonProps] = usePropsInputs(formValues, setFormValues, SECTION_NAME);
-  const [selectProps] = usePropsSelect(allDropdowns, formValues, setFormValues);
+  const [selectProps] = usePropsSelect(allDropdowns, formValues, setFormValues, SECTION_NAME);
 
   return (
-    <Modal show={show} onHide={() => setShow(true)}>
+    <>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
@@ -79,8 +78,8 @@ export default function Product({
               disabled={!canEdit || isLoading}>
               <option>Seleccionar categoría</option>
               {categories.map((category) => (
-                <option key={category.idCategory} value={category.idCategory}>
-                  {category.name}
+                <option key={category.IdCategory} value={category.IdCategory}>
+                  {category.Name}
                 </option>
               ))}
             </Form.Select>
@@ -90,8 +89,8 @@ export default function Product({
       <Modal.Footer>
         <Button
           variant={canEdit ? "secondary" : "primary"}
-          onClick={() => setShow(false)}>
-          Cerrar
+          onClick={closeModal}>
+          Cancelar
         </Button>
         {canEdit && (
           <Button
@@ -102,6 +101,6 @@ export default function Product({
           </Button>
         )}
       </Modal.Footer>
-    </Modal>
+    </>
   );
 }
