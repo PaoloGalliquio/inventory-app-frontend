@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Overall } from "../components/products/Overall";
 import { ProductsTable } from "../components/products/ProductsTable";
-import NavBar from '../components/navBar/NavBar';
 import { useManageGetRequest } from '../hooks/useManageRequest/useManageRequest';
 import CreateProduct from '../components/products/CreateProduct';
 import ModalEnabled from '../components/modalEnabled/ModalEnabled';
+import NavBar from '../components/navBar/NavBar';
 
 function Inventory() {
   const [modalEnabled, setModalEnabled] = useState({ isEnable: false, component: React.Fragment });
@@ -29,7 +29,7 @@ function Inventory() {
   const inventoryHeader = <Col xs={12} className="mb-3">
     <Row>
       <Col>
-        <b>Productos</b>
+        <h4>Productos</h4>
       </Col>
       <Col className="text-end">
         <Button
@@ -59,10 +59,10 @@ function Inventory() {
         refreshPage={init}
       />
       <Container className="py-2 px-3">
-        <Row className="card py-3 px-2 mt-3">
-          <Overall categories={categories} products={categories} />
+        <Row className="border rounded py-3 px-2 mt-3">
+          <Overall categories={categories} products={products} />
         </Row>
-        <Row className="card py-3 px-2 mt-3">
+        <Row className="border rounded py-3 px-2 mt-3">
           {inventoryHeader}
           <Col>
             <ProductsTable

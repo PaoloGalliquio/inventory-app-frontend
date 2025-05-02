@@ -34,7 +34,7 @@ export default function Product({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId="formBasicName">
+          <Form.Group className="mb-3" controlId={[KEYS.name]}>
             <Form.Label>Nombre</Form.Label>
             <Form.Control
               type="text"
@@ -43,7 +43,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicDescription">
+          <Form.Group className="mb-3" controlId={[KEYS.description]}>
             <Form.Label>Descripción</Form.Label>
             <Form.Control
               type="text"
@@ -52,7 +52,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicPrice">
+          <Form.Group className="mb-3" controlId={[KEYS.price]}>
             <Form.Label>Precio</Form.Label>
             <Form.Control
               type="number"
@@ -61,7 +61,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicQuantity">
+          <Form.Group className="mb-3" controlId={[KEYS.quantity]}>
             <Form.Label>Cantidad</Form.Label>
             <Form.Control
               type="number"
@@ -70,7 +70,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicCategory">
+          <Form.Group className="mb-3" controlId={[KEYS.idCategory]}>
             <Form.Label>Categoría</Form.Label>
             <Form.Select
               aria-label="Default select example"

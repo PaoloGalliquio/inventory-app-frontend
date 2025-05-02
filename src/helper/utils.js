@@ -110,3 +110,12 @@ function redirectToLogIn(dispatch) {
     type: "LOGOUT",
   });
 }
+
+export function formatCurrency(value) {
+  const roundedValue = Math.round(value * 100) / 100;
+
+  return roundedValue.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}

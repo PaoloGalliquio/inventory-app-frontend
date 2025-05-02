@@ -1,12 +1,30 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import { formatCurrency } from "../../helper/utils";
+import { useManagePostRequest } from "../../hooks/useManageRequest/useManageRequest";
 
 export function Overall({ categories, products }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [executePost] = useManagePostRequest();
+
   const totalProducts = products.length;
   const totalCategories = categories.length;
   const lowStockProducts = products.filter(
-    (product) => product.quantity < 5
+    (product) => product.Quantity < 5
   ).length;
+  const totalStockValue = formatCurrency(products.reduce(
+    (acc, product) => acc + product.Quantity * product.Price,
+    0
+  ));
+
+  const onNotify = async () => {
+    setIsLoading(true);
+    await executePost(
+      "/api/Notification/SendLowStockNotification",
+      {},
+      () => {}
+    );
+  };
 
   return (
     <Row>
@@ -27,7 +45,8 @@ export function Overall({ categories, products }) {
           </Col>
         </Row>
         <Row>
-          <Col>{totalProducts}</Col>
+          <Col className="border-end">{totalProducts}</Col>
+          <Col>S/ {totalStockValue}</Col>
         </Row>
       </Col>
       <Col>
@@ -38,6 +57,17 @@ export function Overall({ categories, products }) {
         </Row>
         <Row>
           <Col>{lowStockProducts}</Col>
+          <Col>
+            {lowStockProducts > 1 && (
+              <Button
+                disabled={isLoading}
+                onClick={() => {
+                  onNotify();
+                }}>
+                Notificar
+              </Button>
+            )}
+          </Col>
         </Row>
       </Col>
     </Row>

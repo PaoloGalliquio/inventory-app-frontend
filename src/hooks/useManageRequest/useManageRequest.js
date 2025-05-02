@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { responseCode200 } from "../../helper/utils";
-import { useDeleteRequest, useGetRequest, usePostRequest, usePutRequest } from "../useRequest/useRequest";
+import { useDeleteRequest, useDownloadRequest, useGetRequest, usePostRequest, usePutRequest } from "../useRequest/useRequest";
 
 export const useManageGetRequest = () => {
   const [executeGetRequest] = useGetRequest();
@@ -13,7 +13,7 @@ export const useManageGetRequest = () => {
     if (responseCode200(response)) {
       callbackSuccess(response);
     } else {
-      if (response?.data?.message) toast.error(response?.data?.message);
+      if (response?.response?.data?.message) toast.error(response?.response?.data?.message);
     }
     return response;
   };
@@ -35,7 +35,7 @@ export const useManagePostRequest = () => {
       if (response?.data?.message) toast.success(response?.data?.message);
       callbackSuccess(response);
     } else {
-      if (response?.data?.message) toast.error(response?.data?.message);
+      if (response?.response?.data?.message) toast.error(response?.response?.data?.message);
       if (callbackFailure) callbackFailure(response);
     }
     return response;
@@ -58,7 +58,9 @@ export const useManagePutRequest = () => {
       if (response?.data?.message) toast.success(response?.data?.message);
       callbackSuccess(response);
     } else {
-      if (response?.data?.message) toast.error(response?.data?.message);
+      console.log(response);
+      
+      if (response?.response?.data?.message) toast.error(response?.response?.data?.message);
       if (callbackFailure) callbackFailure(response);
     }
     return response;
@@ -80,11 +82,42 @@ export const useManageDeleteRequest = () => {
       if (response?.data?.message) toast.success(response?.data?.message);
       callbackSuccess(response);
     } else {
-      if (response?.data?.message) toast.error(response?.data?.message);
+      if (response?.response?.data?.message) toast.error(response?.response?.data?.message);
       if (callbackFailure) callbackFailure(response);
     }
     return response;
   };
 
   return [manageDeleteRequest];
+}
+
+export const useManageDownloadRequest = () => {
+  const [executeDownloadRequest] = useDownloadRequest();
+
+  const manageDownloadRequest = async (
+    api,
+    fileName,
+    callbackSuccess,
+    callbackFailure = null
+  ) => {
+    toast.info("Descargando archivo...");
+    const response = await executeDownloadRequest(api);
+    if (responseCode200(response)) {
+      toast.success("Descarga exitosa");
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      callbackSuccess(response);
+    } else {
+      if (response?.response?.data?.message) toast.error(response?.response?.data?.message);
+      if (callbackFailure) callbackFailure(response);
+    }
+    return response;
+  };
+
+  return [manageDownloadRequest];
 }

@@ -1,7 +1,6 @@
 import "./App.css";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import React, { Suspense, useContext } from "react";
-import { SwitchTransition, CSSTransition } from "react-transition-group";
 import { appRoutes } from "./routes";
 import { AuthContext, AuthProvider } from "./hooks/context/authContext";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -35,7 +34,11 @@ function AppContent() {
             <Route
               key={route.path}
               path={route.path}
-              element={<route.component />}
+              element={
+                <>
+                  <route.component />
+                </>
+              }
             />
           );
         })}

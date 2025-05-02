@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useManageDeleteRequest } from "../../hooks/useManageRequest/useManageRequest";
 import { Button, Modal } from "react-bootstrap";
 
-function DeleteProduct({ closeModal, refreshPage, product }) {
+function DeleteUser({ closeModal, refreshPage, user }) {
   const [executeDelete] = useManageDeleteRequest();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     setIsLoading(true);
     await executeDelete(
-      `/api/Product/${product.IdProduct}`,
+      `/api/User/${user.IdUser}`,
       successSubmitCallback
     );
     setIsLoading(false);
@@ -23,11 +23,11 @@ function DeleteProduct({ closeModal, refreshPage, product }) {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>Eliminar Producto</Modal.Title>
+        <Modal.Title>Eliminar Usuario</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>
-          ¿Está seguro de que desea eliminar el producto <b>{product.Name}</b>?
+          ¿Está seguro de que desea desactivar al usuario <b>{user.Name}</b>?
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -40,11 +40,11 @@ function DeleteProduct({ closeModal, refreshPage, product }) {
           onClick={() => {
             handleDelete();
           }}>
-          Eliminar
+          Desactivar
         </Button>
       </Modal.Footer>
     </>
   );
 }
 
-export default DeleteProduct;
+export default DeleteUser;

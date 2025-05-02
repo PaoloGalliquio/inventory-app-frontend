@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import NavBar from '../components/navBar/NavBar';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { UsersTable } from "../components/users/UsersTable";
 import CreateUser from "../components/users/CreateUser";
 import { useManageGetRequest } from "../hooks/useManageRequest/useManageRequest";
 import ModalEnabled from "../components/modalEnabled/ModalEnabled";
+import NavBar from "../components/navBar/NavBar";
 
 function Users() {
   const [modalEnabled, setModalEnabled] = useState({ isEnable: false, component: React.Fragment });
@@ -38,7 +38,7 @@ function Users() {
           <Col xs={12} className="mb-3">
             <Row>
               <Col>
-                <b>Usuarios</b>
+                <h4>Usuarios</h4>
               </Col>
               <Col className="text-end">
                 <Button

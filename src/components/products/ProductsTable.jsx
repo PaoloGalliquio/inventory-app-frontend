@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { Button, Table, Collapse, Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
-import arrow from "../../assets/icons/Arrow.svg";
 import DetailProduct from "./DetailProduct";
 import EditProduct from "./EditProduct";
 import DeleteProduct from "./DeleteProduct";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 export function ProductsTable({ products, categories, setModalEnabled }) {
   const KEYS = {
@@ -24,6 +25,59 @@ export function ProductsTable({ products, categories, setModalEnabled }) {
       return newSet;
     });
   }, []);
+
+  const buttons = (product) => {
+    return (
+      <>
+        <Button
+          variant="outline-info"
+          size="sm"
+          className="me-2"
+          onClick={() => {
+            setModalEnabled({
+              isEnable: true,
+              component: DetailProduct,
+              props: {
+                product,
+                categories,
+              },
+            });
+          }}>
+          Detalle
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          className="me-2"
+          onClick={() => {
+            setModalEnabled({
+              isEnable: true,
+              component: EditProduct,
+              props: {
+                product,
+                categories,
+              },
+            });
+          }}>
+          Editar
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={() => {
+            setModalEnabled({
+              isEnable: true,
+              component: DeleteProduct,
+              props: {
+                product,
+              },
+            });
+          }}>
+          Eliminar
+        </Button>
+      </>
+    );
+  };
 
   if (!isMobile) {
     return (
@@ -48,54 +102,7 @@ export function ProductsTable({ products, categories, setModalEnabled }) {
               <td>S/ {product[KEYS.price]}</td>
               <td>{product[KEYS.quantity]}</td>
               <td>{product[KEYS.category]?.[KEYS.name]}</td>
-              <td>
-                <Button
-                  variant="outline-info"
-                  size="sm"
-                  className="me-2"
-                  onClick={() => {
-                    setModalEnabled({
-                      isEnable: true,
-                      component: DetailProduct,
-                      props: {
-                        product,
-                        categories,
-                      },
-                    });
-                  }}>
-                  Detalle
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  className="me-2"
-                  onClick={() => {
-                    setModalEnabled({
-                      isEnable: true,
-                      component: EditProduct,
-                      props: {
-                        product,
-                        categories,
-                      },
-                    });
-                  }}>
-                  Editar
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => {
-                    setModalEnabled({
-                      isEnable: true,
-                      component: DeleteProduct,
-                      props: {
-                        product
-                      },
-                    });
-                  }}>
-                  Eliminar
-                </Button>
-              </td>
+              <td>{buttons(product)}</td>
             </tr>
           ))}
         </tbody>
@@ -118,16 +125,10 @@ export function ProductsTable({ products, categories, setModalEnabled }) {
                     className="rounded-circle p-0 d-flex align-items-center justify-content-center"
                     style={{ width: "1.5rem", height: "1.5rem" }}
                     aria-expanded={isOpen}>
-                    <img
-                      src={arrow}
-                      alt="Desplegar"
-                      style={{
-                        transform: isOpen ? "rotate(270deg)" : "rotate(90deg)",
-                        transition: "transform 0.2s ease",
-                      }}
-                      width={7}
-                      height={7}
-                    />
+                      <FontAwesomeIcon
+                        icon={isOpen ? faChevronUp : faChevronDown}
+                        size="xs"
+                      />
                   </Button>
                 </Col>
                 <Col xs={11} className="text-start p-0">
@@ -146,55 +147,38 @@ export function ProductsTable({ products, categories, setModalEnabled }) {
                     <td>
                       <b>Nombre</b>
                     </td>
-                    <td>{product.name}</td>
+                    <td>{product[KEYS.name]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Descripción</b>
                     </td>
-                    <td>{product.description}</td>
+                    <td>{product[KEYS.description]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Precio</b>
                     </td>
-                    <td>{product.price}</td>
+                    <td>{product[KEYS.price]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Cantidad</b>
                     </td>
-                    <td>{product.quantity}</td>
+                    <td>{product[KEYS.quantity]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Categoría</b>
                     </td>
-                    <td>{product.categoryName}</td>
+                    <td>{product[KEYS.category]?.[KEYS.name]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Acciones</b>
                     </td>
                     <td>
-                      <Button
-                        variant="outline-info"
-                        size="sm"
-                        className="me-2 mb-1">
-                        Detalle
-                      </Button>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="me-2 mb-1">
-                        Editar
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="mb-1">
-                        Eliminar
-                      </Button>
+                      <td>{buttons(product)}</td>
                     </td>
                   </tr>
                 </tbody>

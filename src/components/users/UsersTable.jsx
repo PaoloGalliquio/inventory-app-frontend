@@ -1,10 +1,21 @@
 import React, { useCallback, useState } from "react";
 import { Button, Table, Collapse, Row, Col, Container } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
-import arrow from "../../assets/icons/Arrow.svg";
 import EditUser from "./EditUser";
+import DetailUser from "./DetailUser";
+import DeactivateUser from "./DeactivateUser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 export function UsersTable({ users, roles, setModalEnabled }) {
+  const KEYS = {
+    idUser: "IdUser",
+    name: "Name",
+    email: "Email",
+    password: "Password",
+    idRole: "IdRole",
+    roleName: "RoleName",
+  };
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const [openRows, setOpenRows] = useState(new Set());
   const toggleRow = useCallback((productId) => {
@@ -15,6 +26,59 @@ export function UsersTable({ users, roles, setModalEnabled }) {
     });
   }, []);
 
+  const buttons = (user) => {
+    return (
+      <>
+        <Button
+          variant="outline-info"
+          size="sm"
+          className="me-2"
+          onClick={() => {
+            setModalEnabled({
+              isEnable: true,
+              component: DetailUser,
+              props: {
+                user,
+                roles,
+              },
+            });
+          }}>
+          Detalle
+        </Button>
+        <Button
+          variant="outline-primary"
+          size="sm"
+          className="me-2"
+          onClick={() => {
+            setModalEnabled({
+              isEnable: true,
+              component: EditUser,
+              props: {
+                user,
+                roles,
+              },
+            });
+          }}>
+          Editar
+        </Button>
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={() => {
+            setModalEnabled({
+              isEnable: true,
+              component: DeactivateUser,
+              props: {
+                user,
+              },
+            });
+          }}>
+          Desactivar
+        </Button>
+      </>
+    );
+  };
+
   if (!isMobile) {
     return (
       <Table responsive>
@@ -23,39 +87,18 @@ export function UsersTable({ users, roles, setModalEnabled }) {
             <th>#</th>
             <th>Nombre</th>
             <th>Email</th>
+            <th>Rol</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
-            <tr key={user.id}>
+            <tr key={user[KEYS.idUser]}>
               <td>{index + 1}</td>
-              <td>{user.Name}</td>
-              <td>{user.Email}</td>
-              <td>
-                <Button variant="outline-info" size="sm" className="me-2">
-                  Detalle
-                </Button>
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  className="me-2"
-                  onClick={() => {
-                    setModalEnabled({
-                      isEnable: true,
-                      component: EditUser,
-                      props: {
-                        user,
-                        roles,
-                      },
-                    });
-                  }}>
-                  Editar
-                </Button>
-                <Button variant="outline-danger" size="sm">
-                  Desactivar
-                </Button>
-              </td>
+              <td>{user[KEYS.name]}</td>
+              <td>{user[KEYS.email]}</td>
+              <td>{user[KEYS.roleName]}</td>
+              <td>{buttons(user)}</td>
             </tr>
           ))}
         </tbody>
@@ -64,30 +107,24 @@ export function UsersTable({ users, roles, setModalEnabled }) {
   }
 
   const UserRow = React.memo(({ user }) => {
-    const isOpen = openRows.has(user.id);
+    const isOpen = openRows.has(user[KEYS.idUser]);
 
     return (
-      <React.Fragment key={user.id}>
+      <React.Fragment key={user[KEYS.idUser]}>
         <tr>
           <td className="text-center fw-bold">
             <Container>
               <Row>
                 <Col xs={1} className="text-center p-0">
                   <Button
-                    onClick={() => toggleRow(user.id)}
+                    onClick={() => toggleRow(user[KEYS.idUser])}
                     className="rounded-circle p-0 d-flex align-items-center justify-content-center"
                     style={{ width: "1.5rem", height: "1.5rem" }}
                     aria-expanded={isOpen}>
-                    <img
-                      src={arrow}
-                      alt="Desplegar"
-                      style={{
-                        transform: isOpen ? "rotate(270deg)" : "rotate(90deg)",
-                        transition: "transform 0.2s ease",
-                      }}
-                      width={7}
-                      height={7}
-                    />
+                      <FontAwesomeIcon
+                        icon={isOpen ? faChevronUp : faChevronDown}
+                        size="xs"
+                      />
                   </Button>
                 </Col>
                 <Col xs={11} className="text-start p-0">
@@ -106,38 +143,25 @@ export function UsersTable({ users, roles, setModalEnabled }) {
                     <td>
                       <b>Nombre</b>
                     </td>
-                    <td>{user.name}</td>
+                    <td>{user[KEYS.name]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Email</b>
                     </td>
-                    <td>{user.email}</td>
+                    <td>{user[KEYS.email]}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Rol</b>
+                    </td>
+                    <td>{user[KEYS.roleName]}</td>
                   </tr>
                   <tr>
                     <td>
                       <b>Acciones</b>
                     </td>
-                    <td>
-                      <Button
-                        variant="outline-info"
-                        size="sm"
-                        className="me-2 mb-1">
-                        Detalle
-                      </Button>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        className="me-2 mb-1">
-                        Editar
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="mb-1">
-                        Desactivar
-                      </Button>
-                    </td>
+                    <td>{buttons(user)}</td>
                   </tr>
                 </tbody>
               </table>
@@ -152,7 +176,7 @@ export function UsersTable({ users, roles, setModalEnabled }) {
     <Table responsive bordered className="mobile-user-table">
       <tbody>
         {users.map((user) => (
-          <UserRow key={user.id} user={user} />
+          <UserRow key={user[KEYS.idRole]} user={user} />
         ))}
       </tbody>
     </Table>

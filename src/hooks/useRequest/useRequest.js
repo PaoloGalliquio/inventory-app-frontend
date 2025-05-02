@@ -86,7 +86,8 @@ export const usePutRequest = () => {
   };
 
   return [executePutRequest];
-}
+};
+
 export const useDeleteRequest = () => {
   const { state, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -112,3 +113,30 @@ export const useDeleteRequest = () => {
 
   return [executeDeleteRequest];
 };
+
+export const useDownloadRequest = () => {
+  const { state, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const urlApiBackend = process.env.REACT_APP_BACKEND_URL;
+
+  const executeDownloadRequest = async (api) => {
+    try {
+      return await axios
+        .get(`${urlApiBackend}${api}`, {
+          headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+            Authorization: "Bearer " + state.token,
+          },
+          responseType: "blob",
+        });
+    } catch (response) {
+      console.error("error response", response);
+      manageResponse(response, dispatch, navigate);
+      return response;
+    }
+  };
+
+  return [executeDownloadRequest];
+}
