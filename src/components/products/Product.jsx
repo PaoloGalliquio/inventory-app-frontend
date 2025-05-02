@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { usePropsInputs } from '../../hooks/useProps/usePropsInput.js';
 import { usePropsSelect } from '../../hooks/useProps/usePropsSelect.js';
@@ -21,9 +20,7 @@ export default function Product({
     quantity: "Quantity",
     idCategory: "IdCategory",
   };
-  const [allDropdowns, setAllDropdowns] = useState([
-    { key: "IdCategory", value: categories },
-  ]);
+  const allDropdowns = [{ key: "IdCategory", value: categories }];
   const [commonProps] = usePropsInputs(formValues, setFormValues, SECTION_NAME);
   const [selectProps] = usePropsSelect(allDropdowns, formValues, setFormValues, SECTION_NAME);
 
@@ -34,7 +31,7 @@ export default function Product({
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId={[KEYS.name]}>
+          <Form.Group className="mb-3" controlId={KEYS.name}>
             <Form.Label>Nombre</Form.Label>
             <Form.Control
               type="text"
@@ -43,7 +40,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId={[KEYS.description]}>
+          <Form.Group className="mb-3" controlId={KEYS.description}>
             <Form.Label>Descripción</Form.Label>
             <Form.Control
               type="text"
@@ -52,7 +49,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId={[KEYS.price]}>
+          <Form.Group className="mb-3" controlId={KEYS.price}>
             <Form.Label>Precio</Form.Label>
             <Form.Control
               type="number"
@@ -61,7 +58,7 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId={[KEYS.quantity]}>
+          <Form.Group className="mb-3" controlId={KEYS.quantity}>
             <Form.Label>Cantidad</Form.Label>
             <Form.Control
               type="number"
@@ -70,10 +67,10 @@ export default function Product({
               disabled={!canEdit || isLoading}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId={[KEYS.idCategory]}>
+          <Form.Group className="mb-3" controlId={KEYS.idCategory}>
             <Form.Label>Categoría</Form.Label>
             <Form.Select
-              aria-label="Default select example"
+              aria-label={KEYS.idCategory}
               {...selectProps(KEYS.idCategory)}
               disabled={!canEdit || isLoading}>
               <option>Seleccionar categoría</option>

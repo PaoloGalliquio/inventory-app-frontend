@@ -33,6 +33,7 @@ function DetailUser({ closeModal, refreshPage, user, roles }) {
       roles={roles}
       formValues={formValues}
       isLoading={isLoading}
+      showPassword={false}
     />
   );
 }

@@ -59,7 +59,11 @@ export const handleFind = (allDropdowns, key) => {
 };
 
 export const handleFindDropdownSelected = (allDropdowns, res, key) => {
-  return allDropdowns?.find((o) => o.key == key)?.value?.find((o) => o.value == res[key]);
+  const currentValue = res[key];
+  const dropdown = allDropdowns?.find((o) => o.key === key);
+  const value = dropdown?.value?.find((item) => item.IdCategory == currentValue)
+    ?.IdCategory;
+  return value !== undefined ? value : currentValue;
 };
 
 export const handleChangeSelect = (setFormValues, res, key) => {

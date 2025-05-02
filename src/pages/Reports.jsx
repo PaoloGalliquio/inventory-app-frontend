@@ -37,7 +37,7 @@ function Reports() {
           <Col xs={3}>
             <Card>
               <Card.Body>
-                <Card.Title>Reporte de Existencias Bajas</Card.Title>
+                <Card.Title>Reporte de Existencias Bajas xlsx</Card.Title>
                 <Card.Text>
                   Genera un reporte de los productos con existencias mejor a 5
                   en el inventario en Excel.
@@ -53,7 +53,7 @@ function Reports() {
           <Col xs={3}>
             <Card>
               <Card.Body>
-                <Card.Title>Reporte de Existencias Bajas</Card.Title>
+                <Card.Title>Reporte de Existencias Bajas PDF</Card.Title>
                 <Card.Text>
                   Genera un reporte de los productos con existencias mejor a 5
                   en el inventario en PDF.
